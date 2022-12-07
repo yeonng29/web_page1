@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from bs4 import BeautifulSoup
 from django.contrib.auth.models import User
-from .models import Post, Category, Tag
+from .models import Post, Category, Tag, Comment
 
 
 # Create your tests here.
@@ -44,6 +44,12 @@ class TestView(TestCase) :
         )
         self.post_003.tags.add(self.tag_python_kor)
         self.post_003.tags.add(self.tag_python)
+
+        self.comment_001 = Comment.objects.create(
+            post = self.post_001,
+            author=self.user_obama,
+            content='첫 번째 댓글입니다. '
+        )
 
          # 카테고리 페이지 테스트 코드
         def test_category_page(self) :
@@ -174,6 +180,12 @@ class TestView(TestCase) :
             self.assertNotIn(self.tag_python.name, post_area.text)
             self.assertNotIn(self.tag_python_ko.name, post_area.text)
 
+            # comment area
+            comments_area = soup.find('div', id='comment-area')
+            comment_001_area = comments_area.find('div', id='comment-1')
+            self.assertIn(self.comment_001.author.username, comment_001_area.text)
+            self.assertIn(self.comment_001.content, comment_001_area.text)
+
         def test_tag_page(self):
             response = self.client.get(self.tag_hello.get_absolute_url())
             self.assertEqueal(response.status_code, 200)
@@ -256,6 +268,7 @@ class TestView(TestCase) :
         response = self.client.get(update_post_url)
         self.assertEqual(response.status_code, 200)
         soup = BeautifulSoup(response.content, 'html.parser')
+
 
         self.assertEqual('Edit Post - Blog', soup.title.text)
         main_area = soup.find('div', id='main-area')
