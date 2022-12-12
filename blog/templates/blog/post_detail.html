@@ -97,7 +97,7 @@
                                 <!-- Single comment-->
                                 <div class="d-flex">
                                     <div class="flex-shrink-0" id="comment-{{ comment.pk }}">
-                                        <img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                                        <img class="rounded-circle" src="{{ comment.get_avatar_url }}" alt="{{ comment.author }}" width="60px" /></div>
                                     <div class="ms-3">
                                         {% if user.is_authenticated and comment.author == user %}
                                             <div class="float-right">
@@ -140,8 +140,7 @@
                                         <div class="fw-bold">&nbsp;&nbsp;{{ comment.author.username }} &nbsp;&nbsp;<small class="text-muted">{{ comment.created_at }}</small></div>
                                         <p>{{ comment.content | linebreaks }}</p>
                                         {% if comment.created_at != comment.modified_at %}
-                                            <p class="text-muted float-right"><small>Updated: {{ comment.modif
-                                                ied_at }}</small></p>
+                                            <p class="text-muted float-right"><small>Updated: {{ comment.modified_at }}</small></p>
                                         {% endif %}
                                     </div>
                                 </div>
