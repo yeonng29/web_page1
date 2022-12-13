@@ -25,6 +25,7 @@ class Category(models.Model):
         return f'/blog/category/{self.slug}/'
 
 
+
 # Create your models here.
 class Post(models.Model):
     title = models.CharField(max_length=30)
@@ -57,6 +58,12 @@ class Post(models.Model):
 
     def get_content_markdown(self):
         return markdown(self.content)
+
+    def get_avatar_url(self):
+        if self.author.socialaccount_set.exists():
+            return self.author.socialaccount_set.first().get_avatar_url()
+        else:
+            return 'https://ui-avatars.com/api/?name=29'
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete = models.CASCADE)
